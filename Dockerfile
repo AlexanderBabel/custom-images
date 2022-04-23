@@ -2,7 +2,11 @@ FROM alpine/helm:3.8.0 as build
 
 RUN helm plugin install https://github.com/jkroepke/helm-secrets --version v3.12.0
 
-RUN wget -O /usr/bin/sops https://github.com/mozilla/sops/releases/download/v3.7.2/sops-v3.7.2.linux.arm64
+RUN case "$(uname -m)" in \
+        aarch64) export SOPS_SUFFIX="arm64" ;; \
+        x86_64) export SOPS_SUFFIX="amd64" ;; \
+    esac; \
+    wget -O /usr/bin/sops https://github.com/mozilla/sops/releases/download/v3.7.2/sops-v3.7.2.linux.$SOPS_SUFFIX
 
 COPY wrapper.sh /usr/bin/wrapper.sh
 
