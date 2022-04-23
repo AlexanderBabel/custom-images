@@ -19,6 +19,9 @@ RUN chown -R 999:999 \
 
 FROM quay.io/argoproj/argocd:v2.3.3
 
+ENV ARGOCD_EXEC_TIMEOUT=5m
+ENV HELM_PLUGINS=/home/argocd/.local/share/helm/plugins/
+
 COPY --from=build /usr/bin/sops /usr/local/bin/sops
 COPY --from=build /usr/bin/helm /usr/local/bin/helm.bin
 COPY --from=build /usr/bin/wrapper.sh /usr/local/bin/helm
