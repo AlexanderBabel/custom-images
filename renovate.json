@@ -8,7 +8,11 @@
       "matchUpdateTypes": ["minor", "patch"],
       "automergeType": "branch",
       "automerge": true,
-      "requiredStatusChecks": null
+      "ignoreTests": true
+    },
+    {
+      "matchPackagePrefixes": ["alpine/helm"],
+      "allowedVersions": "<=3.8.0"
     }
   ],
   "regexManagers": [
