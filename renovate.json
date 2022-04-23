@@ -1,0 +1,25 @@
+{
+  "extends": ["config:base", ":disableRateLimiting"],
+  "prHourlyLimit": 0,
+  "dependencyDashboard": true,
+  "packageRules": [
+    {
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automergeType": "branch",
+      "automerge": true,
+      "requiredStatusChecks": null
+    }
+  ],
+  "regexManagers": [
+    {
+      "fileMatch": [".+\\.yaml$"],
+      "matchStrings": [
+        "github.com\\/(?<depName>.*?) --version (?<currentValue>.*) \\|",
+        "github.com\\/(?<depName>.*?)\\/releases\\/download\\/(?<currentValue>.*)\\/sops-.*\\.linux",
+        "github.com\\/(?<depName>.*?)\\/releases\\/download\\/.*\\/sops-(?<currentValue>.*)\\.linux"
+      ],
+      "datasourceTemplate": "github-releases"
+    }
+  ]
+}
