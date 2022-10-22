@@ -17,9 +17,8 @@
   ],
   "regexManagers": [
     {
-      "fileMatch": [".+\\.yaml$"],
+      "fileMatch": ["Dockerfile"],
       "matchStrings": [
-        "github.com\\/(?<depName>.*?) --version (?<currentValue>.*) \\|",
         "github.com\\/(?<depName>.*?)\\/releases\\/download\\/(?<currentValue>.*)\\/sops-.*\\.linux",
         "github.com\\/(?<depName>.*?)\\/releases\\/download\\/.*\\/sops-(?<currentValue>.*)\\.linux"
       ],
