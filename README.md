@@ -1,18 +1,9 @@
-# argocd
+# custom-images
 
-This repository contains a customized version of [argoproj/argo-cd](https://github.com/argoproj/argo-cd). This image contains [sops](https://github.com/mozilla/sops) and the [helm-secrets](https://github.com/jkroepke/helm-secrets) plugin compared to the upstream version.
+This mono repo includes custom docker images which are built to include custom extra components. Here is a quick overview of the software:
 
-The changes can be viewed inside the `Dockerfile`. 
+# Images
 
-This image is built automatically when a new argocd version is released.
-
-## Usage
-
-You can pull the image by using
-```bash
-docker pull alexbabel/argocd:VERSION
-```
-or use GHCR:
-```bash
-docker pull ghcr.io/alexanderbabel/argocd:VERSION
-```
+- [argocd](argocd)
+- [jellyfin](jellyfin)
+- [synapse](synapse)
