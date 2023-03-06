@@ -78,7 +78,7 @@ jobs:
 
       - name: Retrieve version
         id: version
-        run: echo ::set-output name=version::$(sed -nr 's/^FROM quay.*:(.*)/\1/p' Dockerfile)
+        run: echo ::set-output name=version::$(sed -nr 's/^FROM .*:(.*)/\1/p' ${{ matrix.file }}/Dockerfile | tail -n 1)
 
       - name: Docker meta
         id: meta
