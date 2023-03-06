@@ -1,0 +1,15 @@
+#!/usr/bin/with-contenv bash
+
+LIBRESPOT_PIPE="/music/librespot-java"
+LIBRESPOT_METADATA_PIPE="$LIBRESPOT_PIPE.metadata"
+
+if [ -p "$LIBRESPOT_PIPE" ]; then
+  rm "$LIBRESPOT_PIPE"
+fi
+
+if [ -p "$LIBRESPOT_METADATA_PIPE" ]; then
+  rm "$LIBRESPOT_METADATA_PIPE"
+fi
+
+mkfifo "$LIBRESPOT_PIPE"
+mkfifo "$LIBRESPOT_METADATA_PIPE"

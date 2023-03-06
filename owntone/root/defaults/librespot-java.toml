@@ -1,0 +1,142 @@
+### Device type (COMPUTER, TABLET, SMARTPHONE, SPEAKER, TV, AVR, STB, AUDIO_DONGLE, GAME_CONSOLE, CAST_VIDEO, CAST_AUDIO, AUTOMOBILE, WEARABLE, UNKNOWN_SPOTIFY, CAR_THING, UNKNOWN) ###
+deviceType = "SPEAKER"
+### Device ID (40 chars, leave empty for random)  ###
+deviceId = ""
+### Device name ###
+deviceName = "Home Assistant"
+### Log level (OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE, ALL) ###
+logLevel = "INFO"
+### Preferred locale ###
+preferredLocale = "en"
+
+### Cache ###
+[cache]
+	dir = "/config/owntone/cache/"
+	# Cache enabled
+	enabled = true
+	doCleanUp = true
+
+### Authentication ###
+[auth]
+	# Credentials file (JSON)
+	credentialsFile = "/config/owntone/credentials.json"
+	# Spotify password (USER_PASS only)
+	password = ""
+	# Spotify authentication blob Base64-encoded (BLOB only)
+	blob = ""
+	# Whether to store reusable credentials on disk (not a plain password)
+	storeCredentials = true
+	# Strategy (USER_PASS, ZEROCONF, BLOB, FACEBOOK, STORED)
+	strategy = "ZEROCONF"
+	# Spotify username (BLOB, USER_PASS only)
+	username = ""
+
+### Preload ###
+[preload]
+	# Preload enabled
+	enabled = true
+
+### Network ###
+[network]
+	# If ping isn't received within this amount of seconds, reconnect
+	connectionTimeout = 10
+
+### Proxy ###
+[proxy]
+	# Basic auth password
+	password = ""
+	# The proxy hostname
+	address = ""
+	# The proxy port
+	port = 0
+	# Whether authentication is enabled on the server
+	auth = false
+	# The proxy type (HTTP, SOCKS)
+	type = "HTTP"
+	# Connect to proxy using SSL (HTTP only)
+	ssl = false
+	# Whether the proxy is enabled
+	enabled = false
+	# Basic auth username
+	username = ""
+
+### Zeroconf ###
+[zeroconf]
+	# Listen on all interfaces (overrides `zeroconf.interfaces`)
+	listenAll = false
+	# Listen on these interfaces (comma separated list of names)
+	interfaces = "eth0"
+	# Listen on this TCP port (`-1` for random)
+	listenPort = -1
+
+### Shell ###
+[shell]
+	onTrackSeeked = ""
+	onStartedLoading = ""
+	onConnectionDropped = ""
+	onMetadataAvailable = ""
+	onTrackChanged = ""
+	onPanicState = ""
+	onFinishedLoading = ""
+	# Shell events enabled
+	enabled = false
+	onPlaybackResumed = ""
+	onConnectionEstablished = ""
+	onPlaybackEnded = ""
+	onContextChanged = ""
+	# Execute the command with `bash -c`
+	executeWithBash = false
+	onPlaybackPaused = ""
+	onInactiveSession = ""
+	onVolumeChanged = ""
+
+### Time correction ###
+[time]
+	# Manual time correction in millis
+	manualCorrection = 0
+	# Time synchronization method (NTP, PING, MELODY, MANUAL)
+	synchronizationMethod = "NTP"
+
+### API ###
+[api]
+	# API port (`api` module only)
+	port = 24879
+	# API listen interface (`api` module only)
+	host = "0.0.0.0"
+
+### Player ###
+[player]
+	# Whether to apply the Spotify loudness normalisation
+	enableNormalisation = true
+	# Initial volume (0-65536)
+	initialVolume = 21824
+	# Whether librespot-java should ignore volume events, sink volume is set to the max
+	bypassSinkVolume = false
+	# Release mixer line after set delay (in seconds)
+	releaseLineDelay = 20
+	# Normalisation pregain in decibels (loud at +6, normal at +3, quiet at -5)
+	normalisationPregain = 3.0
+	# Output metadata in Shairport Sync format (https://github.com/mikebrady/shairport-sync-metadata-reader)
+	metadataPipe = "/music/librespot-java.metadata"
+	# Autoplay similar songs when your music ends
+	autoplayEnabled = true
+	# Preferred audio quality (NORMAL, HIGH, VERY_HIGH)
+	preferredAudioQuality = "VERY_HIGH"
+	# Where librespot-java should search for local files
+	localFilesPath = ""
+	# Audio output device (MIXER, PIPE, STDOUT, CUSTOM)
+	output = "PIPE"
+	# Crossfade overlap time (in milliseconds)
+	crossfadeDuration = 5000
+	# Audio output Java class name
+	outputClass = ""
+	# Whether the player should retry fetching a chuck if it fails
+	retryOnChunkError = true
+	# Mixer/backend search keywords (semicolon separated)
+	mixerSearchKeywords = ""
+	# Output raw (signed) PCM to this file (`player.output` must be PIPE)
+	pipe = "/music/librespot-java"
+	# Number of volume notches
+	volumeSteps = 64
+	# Log available mixers
+	logAvailableMixers = true
