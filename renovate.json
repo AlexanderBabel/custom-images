@@ -8,11 +8,15 @@
       "matchUpdateTypes": ["minor", "patch"],
       "automergeType": "branch",
       "automerge": true,
-      "ignoreTests": true
+      "requiredStatusChecks": null
     },
     {
       "matchPackagePrefixes": ["alpine/helm"],
       "allowedVersions": "<=3.8.0"
+    },
+    {
+      "matchPackageNames": ["librespot-org/librespot-java"],
+      "extractVersion": "^v(?<version>.*)$"
     }
   ],
   "regexManagers": [
@@ -23,6 +27,13 @@
         "github.com\\/(?<depName>.*?)\\/releases\\/download\\/.*\\/sops-(?<currentValue>.*)\\.linux"
       ],
       "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": ["^Dockerfile$"],
+      "matchStrings": [
+        "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sENV .*?_VERSION=(?<currentValue>.*)\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
     }
   ]
 }
