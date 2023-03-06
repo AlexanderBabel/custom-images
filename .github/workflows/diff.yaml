@@ -1,4 +1,4 @@
-name: Create diff on updated Helm charts
+name: Build Docker Images
 
 on:
   pull_request:
