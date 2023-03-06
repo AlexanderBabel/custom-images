@@ -1,14 +1,11 @@
 name: Build Docker Images
 
 on:
-  pull_request:
+  push:
     branches:
       - main
     paths:
-      - "**/templates/*"
-      - "**/*.values.yaml"
-      - "**/values.yaml"
-      - "**/Chart.yaml"
+      - "**/Dockerfile"
 
 env:
   conf_live_branch: main

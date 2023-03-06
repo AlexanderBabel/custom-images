@@ -9,3 +9,4 @@ RUN npm ci && npm run build:production
 FROM jellyfin/jellyfin:10.8.9
 
 COPY --from=build /build/dist/ /jellyfin/jellyfin-web/
+
