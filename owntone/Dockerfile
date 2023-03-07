@@ -8,7 +8,7 @@ RUN echo "**** install java and remove librespot ****" && \
       openjdk11-jre && \
     apk del \
       librespot && \
-    rm -r /etc/services.d/librespot
+    rm -r /etc/s6-overlay/s6-rc.d/user/contents.d/svc-librespot /etc/s6-overlay/s6-rc.d/svc-librespot
 
 ADD https://github.com/librespot-org/librespot-java/releases/download/v${LIBRESPOT_VERSION}/librespot-api-${LIBRESPOT_VERSION}.jar /opt/librespot-java.jar
 COPY root/ /

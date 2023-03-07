@@ -1,12 +1,27 @@
 #!/usr/bin/with-contenv bash
+# shellcheck shell=bash
 
-# make folders
+# make our folders
 mkdir -p \
+    /var/run/dbus \
+    /run/dbus \
     /config/owntone/dbase_and_logs \
     /daapd-pidfolder
 
+
+if [[ -e /var/run/dbus.pid ]]; then
+    rm -f /var/run/dbus.pid
+fi
+
+if [[ -e /run/dbus/dbus.pid ]]; then
+    rm -f /run/dbus/dbus.pid
+fi
+
+dbus-uuidgen --ensure
+sleep 1
+
 # configure defaults copy of conf
-if [ ! -e "/defaults/owntone.conf" ]; then
+if [[ ! -e "/defaults/owntone.conf" ]]; then
 cp /etc/owntone.conf.orig /defaults/owntone.conf
 sed -i \
     -e '/cache_path\ =/ s/# *//' \
@@ -22,17 +37,24 @@ sed -i \
 fi
 
 # symlink conf to /conf
-[[ ! -f /config/owntone/owntone.conf ]] && \
+if [[ ! -f /config/owntone.conf ]]; then
     cp /defaults/owntone.conf /config/owntone/owntone.conf
-[[ ! -L /etc/owntone.conf && -f /etc/owntone.conf ]] && \
+fi
+
+if [[ ! -L /etc/owntone.conf && -f /etc/owntone.conf ]]; then
     rm /etc/owntone.conf
-[[ ! -L /etc/owntone.conf ]] && \
+fi
+
+if [[ ! -L /etc/owntone.conf ]]; then
     ln -s /config/owntone/owntone.conf /etc/owntone.conf
-[[ ! -f /config/owntone/librespot-java.toml ]] && \
+fi
+
+if [[ ! -L /config/owntone/librespot-java.toml ]]; then
     cp /defaults/librespot-java.toml /config/owntone/librespot-java.toml
+fi
 
 # permissions
-chown -R abc:abc \
+lsiown -R abc:abc \
     /app \
     /config/owntone \
     /daapd-pidfolder
