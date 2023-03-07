@@ -49,7 +49,7 @@ if [[ ! -L /etc/owntone.conf ]]; then
     ln -s /config/owntone/owntone.conf /etc/owntone.conf
 fi
 
-if [[ ! -L /config/owntone/librespot-java.toml ]]; then
+if [[ ! -f /config/owntone/librespot-java.toml ]]; then
     cp /defaults/librespot-java.toml /config/owntone/librespot-java.toml
 fi
 
