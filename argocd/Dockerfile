@@ -6,7 +6,7 @@ RUN case "$(uname -m)" in \
         aarch64) export SOPS_SUFFIX="arm64" ;; \
         x86_64) export SOPS_SUFFIX="amd64" ;; \
     esac; \
-    wget -O /usr/bin/sops https://github.com/mozilla/sops/releases/download/v3.7.2/sops-v3.7.2.linux.$SOPS_SUFFIX
+    wget -O /usr/bin/sops https://github.com/mozilla/sops/releases/download/v3.7.3/sops-v3.7.3.linux.$SOPS_SUFFIX
 
 COPY wrapper.sh /usr/bin/wrapper.sh
 
@@ -21,7 +21,7 @@ RUN chown -R 999:999 \
         /usr/bin/sops \
         /root/.local/share/helm/plugins/
 
-FROM quay.io/argoproj/argocd:v2.6.3
+FROM quay.io/argoproj/argocd:v2.6.4
 
 ENV ARGOCD_EXEC_TIMEOUT=5m
 ENV HELM_PLUGINS=/home/argocd/.local/share/helm/plugins/
