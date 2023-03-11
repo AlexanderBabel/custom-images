@@ -6,6 +6,6 @@ RUN git clone --depth 1 -b intros https://github.com/ConfusedPolarBear/jellyfin-
 
 RUN npm ci && npm run build:production
 
-FROM jellyfin/jellyfin:10.8.9
+FROM linuxserver/jellyfin:10.8.9
 
 COPY --from=build /build/dist/ /jellyfin/jellyfin-web/
