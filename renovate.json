@@ -15,6 +15,11 @@
       "allowedVersions": "<=3.8.0"
     },
     {
+      "matchDatasources": ["docker"],
+      "matchPackagePrefixes": ["linuxserver/jellyfin"],
+      "allowedVersions": "<=2000"
+    },
+    {
       "matchPackageNames": ["librespot-org/librespot-java"],
       "extractVersion": "^v(?<version>.*)$"
     }
