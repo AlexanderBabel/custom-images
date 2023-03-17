@@ -63,7 +63,7 @@ preferredLocale = "en"
 ### Zeroconf ###
 [zeroconf]
 	# Listen on all interfaces (overrides `zeroconf.interfaces`)
-	listenAll = false
+	listenAll = true
 	# Listen on these interfaces (comma separated list of names)
 	interfaces = "eth0"
 	# Listen on this TCP port (`-1` for random)
