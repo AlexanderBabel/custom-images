@@ -4,7 +4,7 @@ This repository contains a customized version of [nextcloud](https://hub.docker.
 
 The changes can be viewed inside the `Dockerfile`. 
 
-This image is built automatically when a new synapse version is released.
+This image is built automatically when a new nextcloud version is released.
 
 ## Usage
 
