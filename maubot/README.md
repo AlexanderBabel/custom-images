@@ -1,4 +1,4 @@
-# matrix-synapse
+# maubot
 
 This repository contains a customized version of [dock.mau.dev/maubot/maubot](https://mau.dev/maubot/maubot/container_registry) ([Gitlab](https://mau.dev/maubot/maubot/-/tree/master)). This image contains an extra pip package compared to the upstream version.
 
