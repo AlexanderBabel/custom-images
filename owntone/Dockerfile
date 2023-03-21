@@ -12,4 +12,3 @@ RUN echo "**** install java and remove librespot ****" && \
 
 ADD https://github.com/librespot-org/librespot-java/releases/download/v${LIBRESPOT_VERSION}/librespot-api-${LIBRESPOT_VERSION}.jar /opt/librespot-java.jar
 COPY root/ /
-
