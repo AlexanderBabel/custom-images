@@ -1,3 +1,3 @@
-FROM matrixdotorg/synapse:v1.78.0
+FROM matrixdotorg/synapse:v1.79.0
 
 RUN pip install synapse-s3-storage-provider shared-secret-authenticator
