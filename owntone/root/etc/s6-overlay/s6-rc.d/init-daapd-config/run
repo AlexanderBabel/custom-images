@@ -37,7 +37,7 @@ sed -i \
 fi
 
 # symlink conf to /conf
-if [[ ! -f /config/owntone.conf ]]; then
+if [[ ! -f /config/owntone/owntone.conf ]]; then
     cp /defaults/owntone.conf /config/owntone/owntone.conf
 fi
 

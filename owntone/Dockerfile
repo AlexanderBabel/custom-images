@@ -1,4 +1,4 @@
-FROM ghcr.io/linuxserver/daapd:28.6-ls105
+FROM ghcr.io/linuxserver/daapd:28.6-ls106
 
 # renovate: datasource=github-releases depName=librespot-org/librespot-java
 ENV LIBRESPOT_VERSION=1.6.2
@@ -12,4 +12,3 @@ RUN echo "**** install java and remove librespot ****" && \
 
 ADD https://github.com/librespot-org/librespot-java/releases/download/v${LIBRESPOT_VERSION}/librespot-api-${LIBRESPOT_VERSION}.jar /opt/librespot-java.jar
 COPY root/ /
-
