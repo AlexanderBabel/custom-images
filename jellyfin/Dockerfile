@@ -2,10 +2,16 @@ FROM --platform=$BUILDPLATFORM node:18 as build
 
 WORKDIR /build
 
-RUN git clone --depth 1 -b intros https://github.com/ConfusedPolarBear/jellyfin-web .
+ARG BRANCH=release-10.8.z
+
+RUN git clone --depth 1 -b "$BRANCH" https://github.com/jellyfin/jellyfin-web .
+
+ADD https://github.com/jellyfin/jellyfin-web/compare/${BRANCH}...ConfusedPolarBear:jellyfin-web:intros.patch intros.patch
+
+RUN git apply intros.patch
 
 RUN npm ci && npm run build:production
 
-FROM linuxserver/jellyfin:10.8.9-1-ls203
+FROM linuxserver/jellyfin:10.8.10-1-ls209
 
 COPY --from=build /build/dist/ /usr/share/jellyfin/web/
