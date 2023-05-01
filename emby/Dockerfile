@@ -13,7 +13,7 @@ RUN case "$(uname -m)" in \
     unzip ilasm.zip runtimes/$DL_ARCH/native/ilasm && \
     mv runtimes/$DL_ARCH/native/ilasm .
 
-FROM linuxserver/emby:4.7.11.0-ls146
+FROM ghcr.io/linuxserver/emby:beta-4.8.0.32-ls214
 
 WORKDIR /patch/tmp
 
