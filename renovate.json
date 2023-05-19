@@ -11,10 +11,6 @@
       "requiredStatusChecks": null
     },
     {
-      "matchPackagePrefixes": ["alpine/helm"],
-      "allowedVersions": "<=3.8.0"
-    },
-    {
       "matchDatasources": ["docker"],
       "matchPackagePrefixes": ["ghcr.io/linuxserver/jellyfin"],
       "allowedVersions": "<=2000"
