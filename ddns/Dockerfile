@@ -4,3 +4,4 @@ ADD ddns.sh /bin/ddns
 
 ENTRYPOINT [ "sh" ]
 CMD ["/bin/ddns"]
+

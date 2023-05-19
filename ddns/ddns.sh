@@ -14,8 +14,8 @@ PROXIED="${CLOUDFLARE_PROXY:-false}"
 while true; do
   echo "[DDNS] Fetching newest IP addresses"
 
-  IPv4=$(curl -s4 https://ifconfig.co)
-  IPv6=$(curl -s6 https://ifconfig.co)
+  IPv4=$(curl -s4 https://api64.ipify.org)
+  IPv6=$(curl -s6 https://api64.ipify.org)
 
   echo "[DDNS] Sending Update to Cloudflare"
 
