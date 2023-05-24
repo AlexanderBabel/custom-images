@@ -13,7 +13,7 @@ This mono repo includes custom docker images which are built to include custom e
 
 ## Usage
 
-You can pull a image by using
+You can pull an image by using
 ```bash
 docker pull alexbabel/SOFTWARE:VERSION
 ```
