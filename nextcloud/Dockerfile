@@ -1,4 +1,4 @@
-FROM nextcloud:26.0.2
+FROM nextcloud:27.0.0
 
 RUN \
   case "$(uname -m)" in \
