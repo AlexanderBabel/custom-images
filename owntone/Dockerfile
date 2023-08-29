@@ -1,4 +1,4 @@
-FROM ghcr.io/linuxserver/daapd:28.6-ls112
+FROM ghcr.io/linuxserver/daapd:28.7-ls117
 
 # renovate: datasource=github-releases depName=librespot-org/librespot-java
 ENV LIBRESPOT_VERSION=1.6.3
