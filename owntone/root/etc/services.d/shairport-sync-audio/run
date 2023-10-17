@@ -1,0 +1,38 @@
+#!/usr/bin/with-contenv bashio
+# ==============================================================================
+# Community Hass.io Add-ons: Shairport Sync
+# Starts the Shairport Sync service
+# ==============================================================================
+# shellcheck disable=SC1091
+
+if $(bashio::config 'airplay_audio'); then
+
+#sleep 5
+# Wait for Avahi to become available
+s6-svwait -u -t 5000 /var/run/service/svc-avahi
+
+# Wait at least 5 seconds before starting
+# Avahi might need some time.
+#sleep 4
+
+declare airplay_audio_name
+
+if bashio::config.has_value 'airplay_audio_name'; then
+    airplay_audio_name=$(bashio::config 'airplay_audio_name')
+else
+    airplay_audio_name=$(bashio::info.hostname)
+fi
+
+#exec /usr/bin/shairport-sync -v -p 5001 -a haoppa -o pa 
+
+	exec /usr/bin/shairport-sync \
+    -$(bashio::config 'shairport_sync_log_level') \
+    -p $(bashio::config 'airplay_audio_port') \
+    -a "$airplay_audio_name"  \
+    -o pa  \
+    -c /config/owntone/shairport-sync.conf \
+    --displayConfig 
+fi
+
+    #-c /config/owntone/shairport-sync.conf --displayConfig \
+    #--metadata-enable 

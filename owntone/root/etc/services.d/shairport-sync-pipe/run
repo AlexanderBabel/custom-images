@@ -1,0 +1,42 @@
+#!/usr/bin/with-contenv bashio
+# ==============================================================================
+# Community Hass.io Add-ons: Shairport Sync
+# Starts the Shairport Sync service
+# ==============================================================================
+# shellcheck disable=SC1091
+
+if $(bashio::config 'airplay_pipe'); then
+
+#sleep 5
+# Wait for Avahi to become available
+s6-svwait -u -t 5000 /var/run/service/svc-avahi
+
+# Wait at least 5 seconds before starting
+# Avahi might need some time.
+#sleep 4
+
+declare airplay_pipe_name
+
+if bashio::config.has_value 'airplay_pipe_name'; then
+    airplay_pipe_name=$(bashio::config 'airplay_pipe_name')
+else
+    airplay_pipe_name=$(bashio::info.hostname)
+fi
+
+#exec /usr/bin/shairport-sync -v -p 5003 -a haopipe -o pipe /music/librespot-java 
+
+	exec /usr/bin/shairport-sync \
+    -$(bashio::config 'shairport_sync_log_level') \
+    -p $(bashio::config 'airplay_pipe_port') \
+    -a "$airplay_pipe_name"  \
+    -o pipe /music/librespot-java \
+	-B "/usr/bin/curl -X POST http://localhost:24879/player/pause" \
+    -c /config/owntone/shairport-sync-pipe.conf \
+    --displayConfig 
+
+fi
+
+
+#	-meta-dir = /music/librespot-java.metadata \
+    #-c /config/owntone/shairport-sync.conf --displayConfig \
+    #--metadata-enable 

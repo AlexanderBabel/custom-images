@@ -1,0 +1,11 @@
+#!/usr/bin/with-contenv bash
+# ==============================================================================
+# Community Hass.io Add-ons: Shairport Sync
+# Starts the Shairport Sync service
+# ==============================================================================
+# shellcheck disable=SC1091
+
+/usr/sbin/owntone -v > /config/owntone/versions.txt
+/usr/bin/shairport-sync -V >> /config/owntone/versions.txt
+avahi-daemon -V >> /config/owntone/versions.txt
+#ls -R / > /config/owntone/versions.txt
