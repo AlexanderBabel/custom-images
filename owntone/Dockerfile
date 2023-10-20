@@ -1,7 +1,4 @@
-
-
 FROM ghcr.io/linuxserver/daapd:28.8-ls122 AS owntone
-
 
 # renovate: datasource=github-releases depName=librespot-org/librespot-java
 ENV LIBRESPOT_VERSION=1.6.3
@@ -23,100 +20,12 @@ RUN echo "**** install java and remove librespot ****" && \
     && mv /tmp/bashio/lib /usr/lib/bashio \
     && ln -s /usr/lib/bashio/bashio /usr/bin/bashio \
     && rm -f -r \
-        /tmp/* 
+        /tmp/*  \
+    && apk add  -U --update --no-cache --repository=https://dl-cdn.alpinelinux.org/alpine/edge/testing shairport-sync 
 
-ADD https://github.com/librespot-org/librespot-java/releases/download/v${LIBRESPOT_VERSION}/librespot-api-${LIBRESPOT_VERSION}.jar /opt/librespot-java.jar
+ADD https://github.com/librespot-org/librespot-java/releases/download/v${LIBRESPOT_VERSION}/librespot-api-${LIBRESPOT_VERSION}.jar /opt/librespot-java.jar 
 
-#FROM alpine:3.18
-FROM ghcr.io/linuxserver/baseimage-alpine:3.18 AS sps
-
-#RUN apk add  -U --update --no-cache --repository=https://dl-cdn.alpinelinux.org/alpine/edge/testing shairport-sync 
-
-RUN apk -U add \
-        #alsa-lib-dev \
-        autoconf \
-        automake \
-        avahi-dev \
-        build-base \
-        #dbus \
-        ffmpeg-dev \
-        git \
-        libconfig-dev \
-        libgcrypt-dev \
-        libplist-dev \
-        libressl-dev \
-        libsndfile-dev \
-        libsodium-dev \
-        libtool \
-     #   mosquitto-dev \
-        popt-dev \
-        pulseaudio-dev \
-        soxr-dev \
-        xxd
-
-RUN cd /root \
- && git clone https://github.com/mikebrady/shairport-sync.git \
- && cd shairport-sync \
- && autoreconf -i -f \
- && ./configure \
-		    --prefix=/usr \
-		    --sysconfdir=/etc \
-        --with-pipe \
-        --with-pa \
-        --with-avahi \
-        --with-ssl=openssl \
-        --with-soxr \
-        --with-metadata \
-        #--with-mqtt-client \
-        --with-convolution \
-       #  --with-apple-alac \
- && make \
- && make install \
- && cd / \
- && apk --purge del \
-        git \
-        build-base \
-        autoconf \
-        automake \
-        libtool \
-        alsa-lib-dev \
-        libdaemon-dev \
-        popt-dev \
-        libressl-dev \
-        soxr-dev \
-        avahi-dev \
-        libconfig-dev \
- && apk add \
-       # dbus \
-        #alsa-lib \
-        #alsa-plugins-pulse \
-        #libdaemon \
-        popt \
-        libressl \
-        soxr \
-        #avahi \
-        libconfig \
-        #mosquitto \
- && rm -rf \
-        /etc/ssl \
-        /var/cache/apk/* \
-        /lib/apk/db/* \
-        /root/shairport-sync        
-
-COPY --from=owntone / /
 COPY root/ /
-
-
-#FROM ghcr.io/hassio-addons/base:14.2.0
-
-#RUN apk -U add \
-#        alsa-lib 
-
-#COPY --from=sps / /   
-#COPY / /     
-
-# ports and volumes
-EXPOSE 5000
 
 LABEL \
   io.hass.arch="armhf|aarch64|i386|amd64" \
