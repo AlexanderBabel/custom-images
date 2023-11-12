@@ -1,4 +1,4 @@
-FROM alpine/helm:3.13.1 as build
+FROM alpine/helm:3.13.2 as build
 
 RUN helm plugin install https://github.com/jkroepke/helm-secrets --version v4.4.2
 
