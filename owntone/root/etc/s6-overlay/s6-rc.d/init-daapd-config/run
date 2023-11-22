@@ -1,4 +1,4 @@
-#!/usr/bin/with-contenv bash
+#!/usr/bin/with-contenv bashio
 # shellcheck shell=bash
 
 # make our folders
@@ -53,8 +53,32 @@ if [[ ! -f /config/owntone/librespot-java.toml ]]; then
     cp /defaults/librespot-java.toml /config/owntone/librespot-java.toml
 fi
 
+# Set cache true or false
+if $(bashio::config 'librespot_java_cache'); then
+    sed -i '/\[cache\]/,/^\tenabled = .*$/ s/^\tenabled = .*$/\tenabled = true/' /config/owntone/librespot-java.toml
+else
+    sed -i '/\[cache\]/,/^\tenabled = .*$/ s/^\tenabled = .*$/\tenabled = false/' /config/owntone/librespot-java.toml
+fi
+
 # permissions
 lsiown -R abc:abc \
     /app \
     /config/owntone \
     /daapd-pidfolder
+
+# Set cache true or false
+if $(bashio::config 'airplay_pipe'); then
+    LINE='airplay "'$(bashio::config 'airplay_pipe_name')'" { exclude = true } # Exclude airplay_pipe device from owntone device list'
+    FILE='/config/owntone/owntone.conf'
+    sed -i '/{ exclude = true } # Exclude airplay_pipe device from owntone device list/d' $FILE
+    grep -qF -- "$LINE" "$FILE" || echo "$LINE" >> "$FILE"    
+fi
+
+# configure defaults copy of conf
+#if [[ ! -e "/defaults/shairport-sync.conf" ]]; then
+ #   cp /etc/shairport-sync.conf.sample /defaults/shairport-sync.conf
+#sed -i \
+#    -e   's_//\tname = "/tmp/shairport-sync-audio"; // this is the default_//\tname = "/music/librespot-java"; // this is the default _g'  \
+#	-e   's#//\tpipe_name = "/tmp/shairport-sync-metadata";#//\tpipe_name = "/music/librespot-java.metadata";#g' \
+#     /defaults/shairport-sync.conf
+#fi     
