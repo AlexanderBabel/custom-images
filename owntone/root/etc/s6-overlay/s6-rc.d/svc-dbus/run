@@ -1,0 +1,8 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+# As suggested by iVolt1 
+# (background: https://developers.home-assistant.io/blog/2023/04/13/new_limits_for_add_ons/)
+ulimit -n 1048576
+exec \
+    dbus-daemon --system --nofork

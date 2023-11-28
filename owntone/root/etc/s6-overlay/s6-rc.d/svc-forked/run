@@ -1,0 +1,11 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+#!/usr/bin/with-contenv bash
+
+# As suggested by iVolt1 
+# (background: https://developers.home-assistant.io/blog/2023/04/13/new_limits_for_add_ons/)
+ulimit -n 1048576
+exec \
+    s6-setuidgid abc /usr/sbin/owntone -f \
+    -P /daapd-pidfolder/owntone.pid
