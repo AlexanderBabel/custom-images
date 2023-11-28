@@ -1,4 +1,0 @@
-#!/usr/bin/with-contenv bash
-
-# Set max open file limit to avoid memory allocation issues
-ulimit -n 1048576
