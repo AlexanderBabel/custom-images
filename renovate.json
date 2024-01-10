@@ -16,6 +16,11 @@
       "allowedVersions": "<=2000"
     },
     {
+      "matchDatasources": ["docker"],
+      "matchPackagePrefixes": ["bitnami/postgresql"],
+      "allowedVersions": "<=15"
+    },
+    {
       "matchPackageNames": ["librespot-org/librespot-java"],
       "extractVersion": "^v(?<version>.*)$"
     },
