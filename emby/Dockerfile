@@ -1,4 +1,4 @@
-FROM curlimages/curl:8.4.0 as builder
+FROM curlimages/curl:8.6.0 as builder
 
 WORKDIR /download
 
@@ -13,7 +13,7 @@ RUN case "$(uname -m)" in \
     unzip ilasm.zip runtimes/$DL_ARCH/native/ilasm && \
     mv runtimes/$DL_ARCH/native/ilasm .
 
-FROM ghcr.io/linuxserver/emby:beta-4.8.0.61-ls251
+FROM ghcr.io/linuxserver/emby:beta-4.9.0.3-ls277
 
 WORKDIR /patch/tmp
 
