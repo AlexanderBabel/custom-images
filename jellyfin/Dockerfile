@@ -12,6 +12,6 @@ RUN git apply intros.patch
 
 RUN npm ci && npm run build:production
 
-FROM ghcr.io/linuxserver/jellyfin:10.9.10ubu2404-ls29
+FROM ghcr.io/linuxserver/jellyfin:10.9.11ubu2404-ls31
 
 COPY --from=build /build/dist/ /usr/share/jellyfin/web/
