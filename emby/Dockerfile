@@ -1,4 +1,4 @@
-FROM curlimages/curl:8.9.1 as builder
+FROM curlimages/curl:8.10.0 as builder
 
 WORKDIR /download
 
