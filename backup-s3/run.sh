@@ -104,13 +104,13 @@ if [[ "$USE_NAME" == "true" ]]; then
   create_symlinks
 
   log "Syncing Backup Archives"
-  aws "$EXTRA" s3 sync "$SYMLINKS_PATH" "s3://$BUCKET/" --quiet
+  aws "$EXTRA" s3 sync "$SYMLINKS_PATH" "s3://$BUCKET/"
 
   cleanup
 else
   log "Continuing without Backup names"
   log "Syncing Backup Archives"
-  aws "$EXTRA" s3 sync "$BACKUP_PATH" "s3://$BUCKET/" --quiet
+  aws "$EXTRA" s3 sync "$BACKUP_PATH" "s3://$BUCKET/"
 fi
 
 if [[ -n "$CHECK_URL" ]]; then
