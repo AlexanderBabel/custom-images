@@ -1,7 +1,7 @@
 FROM linkstackorg/linkstack:latest
 
 # renovate: datasource=github-releases depName=LinkStackOrg/LinkStack
-ENV LINKSTACK_VERSION=v4.7.6
+ENV LINKSTACK_VERSION=v4.8.0
 
 ADD https://github.com/LinkStackOrg/LinkStack/releases/download/${LINKSTACK_VERSION}/linkstack.zip /tmp/linkstack.zip
 RUN rm -r /htdocs && \
