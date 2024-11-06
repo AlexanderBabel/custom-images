@@ -1,4 +1,4 @@
-FROM curlimages/curl:8.10.1
+FROM curlimages/curl:8.11.0
 
 ADD ddns.sh /bin/ddns
 
