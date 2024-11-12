@@ -1,4 +1,4 @@
-FROM ghcr.io/hassio-addons/base:16.3.5
+FROM ghcr.io/hassio-addons/base:16.3.6
 
 ENV LANG C.UTF-8
 
