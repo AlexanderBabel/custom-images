@@ -6,7 +6,7 @@ RUN case "$(uname -m)" in \
         aarch64) export SOPS_SUFFIX="arm64" ;; \
         x86_64) export SOPS_SUFFIX="amd64" ;; \
     esac; \
-    wget -O /usr/bin/sops https://github.com/mozilla/sops/releases/download/v3.9.4/sops-v3.9.4.linux.$SOPS_SUFFIX
+    wget -O /usr/bin/sops https://github.com/mozilla/sops/releases/download/v3.10.2/sops-v3.10.2.linux.$SOPS_SUFFIX
 
 COPY wrapper.sh /usr/bin/wrapper.sh
 
