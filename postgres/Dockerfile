@@ -5,7 +5,7 @@ RUN case "$(uname -m)" in \
     esac; \
     wget -O /tmp/vectors.deb https://github.com/tensorchord/pgvecto.rs/releases/download/v0.2.0/vectors-pg15_0.2.0_${VECTORS_SUFFIX}.deb
 
-FROM bitnami/postgresql:15.6.0-debian-12-r4
+FROM bitnami/postgresql:15.10.0-debian-12-r2
 COPY --from=binary /tmp/vectors.deb /tmp/vectors.deb
 USER root
 RUN apt-get install -y /tmp/vectors.deb && rm -f /tmp/vectors.deb && \
