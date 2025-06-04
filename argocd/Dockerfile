@@ -1,6 +1,6 @@
 FROM alpine/helm:3.18.1 as build
 
-RUN helm plugin install https://github.com/jkroepke/helm-secrets --version v4.6.4
+RUN helm plugin install https://github.com/jkroepke/helm-secrets --version v4.6.5
 
 RUN case "$(uname -m)" in \
         aarch64) export SOPS_SUFFIX="arm64" ;; \
