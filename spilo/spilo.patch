@@ -1,0 +1,35 @@
+diff --git a/postgres-appliance/Dockerfile b/postgres-appliance/Dockerfile
+index 9844872..554d6a8 100644
+--- a/postgres-appliance/Dockerfile
++++ b/postgres-appliance/Dockerfile
+@@ -60,7 +60,8 @@ ENV POSTGIS_VERSION=3.5 \
+     PLPROFILER=REL4_2_5 \
+     PG_PROFILE=4.7 \
+     PAM_OAUTH2=v1.0.1 \
+-    PG_PERMISSIONS_COMMIT=f4b7c18676fa64236a1c8e28d34a35764e4a70e2
++    PG_PERMISSIONS_COMMIT=f4b7c18676fa64236a1c8e28d34a35764e4a70e2 \
++    VCHORD_VERSION=0.4.3
+ 
+ WORKDIR /builddeps
+ RUN bash base.sh
+diff --git a/postgres-appliance/build_scripts/base.sh b/postgres-appliance/build_scripts/base.sh
+index 425507e..67f082a 100644
+--- a/postgres-appliance/build_scripts/base.sh
++++ b/postgres-appliance/build_scripts/base.sh
+@@ -134,6 +134,16 @@ for version in $DEB_PG_SUPPORTED_VERSIONS; do
+     find "/usr/lib/postgresql/$version/lib/" \( -name 'timescaledb-2.*.so' -o -name 'timescaledb-tsl-2.*.so' \) "${exclude_patterns[@]}" -delete
+ 
+     # Install 3rd party stuff
++    if [ "${version%.*}" -ge 13 ]; then
++        case "$(uname -m)" in
++            aarch64) export VCHORD_SUFFIX="arm64" ;;
++            x86_64) export VCHORD_SUFFIX="amd64" ;;
++        esac;
++        curl -sL https://github.com/tensorchord/VectorChord/releases/download/${VCHORD_VERSION}/postgresql-${version}-vchord_${VCHORD_VERSION}-1_${VCHORD_SUFFIX}.deb -o "vchord-pg${version}_${VCHORD_VERSION}_${VCHORD_SUFFIX}.deb"
++
++        apt-get install "./vchord-pg${version}_${VCHORD_VERSION}_${VCHORD_SUFFIX}.deb"
++        rm -v "./vchord-pg${version}_${VCHORD_VERSION}_${VCHORD_SUFFIX}.deb"
++    fi
+ 
+     if [ "${TIMESCALEDB_APACHE_ONLY}" != "true" ] && [ "${TIMESCALEDB_TOOLKIT}" = "true" ]; then
+         apt-get update
