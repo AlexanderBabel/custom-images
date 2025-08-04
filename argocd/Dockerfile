@@ -1,4 +1,4 @@
-FROM alpine/helm:3.18.3 as build
+FROM alpine/helm:3.18.4 as build
 
 RUN helm plugin install https://github.com/jkroepke/helm-secrets --version v4.6.5
 
@@ -21,7 +21,7 @@ RUN chown -R 999:999 \
         /usr/bin/sops \
         /root/.local/share/helm/plugins/
 
-FROM quay.io/argoproj/argocd:v3.0.11
+FROM quay.io/argoproj/argocd:v3.0.12
 
 ENV ARGOCD_EXEC_TIMEOUT=5m
 ENV HELM_PLUGINS=/home/argocd/.local/share/helm/plugins/
