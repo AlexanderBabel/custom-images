@@ -23,6 +23,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: zalando/spilo
+          ref: 4.1-p2
           path: upstream-spilo
 
       - name: Apply patch
@@ -47,7 +48,7 @@ jobs:
         with:
           images: ghcr.io/alexanderbabel/spilo
           tags: |
-            4.0-p3
+            4.1-p2
             latest
 
       - name: Build and push
