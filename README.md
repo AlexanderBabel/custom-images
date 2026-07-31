@@ -5,7 +5,6 @@ This mono repo includes custom docker images which are built to include custom e
 ## Images
 
 - [argocd](argocd) A tools for GitOps and CD for Kubernetes
-- [maubot](maubot) A self hosted bot framework for Matrix
 - [owntone](owntone) A custom version of OwnTone with librespot-java for the [HomePod Connect Hass.io Addon](https://community.home-assistant.io/t/homepod-connect-spotify-on-homepods-with-spotify-connect)
 - [spilo](spilo) Zalando's Spilo image with vchord Postgres extension
 
