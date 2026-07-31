@@ -7,10 +7,6 @@ on:
     paths:
       - "spilo/**"
 
-env:
-  conf_live_branch: main
-  conf_ignore_known_labels_containing_versions: true
-
 jobs:
   docker:
     name: Build Docker Images
@@ -18,9 +14,9 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           repository: zalando/spilo
           ref: 4.1-p2
@@ -30,13 +26,13 @@ jobs:
         run: cd upstream-spilo && git apply ../spilo/spilo.patch
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Login to GHCR
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -44,7 +40,7 @@ jobs:
 
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: ghcr.io/alexanderbabel/spilo
           tags: |
@@ -52,7 +48,7 @@ jobs:
             latest
 
       - name: Build and push
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: upstream-spilo/postgres-appliance
           push: true
