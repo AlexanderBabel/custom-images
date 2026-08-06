@@ -1,41 +1,57 @@
 #!/bin/sh
-# librespot --onevent hook: translate a track change into the Shairport Sync
+# librespot --onevent hook: translate librespot events into the Shairport Sync
 # metadata items OwnTone's pipe input understands (src/inputs/pipe.c).
-# Only title/artist/album/cover are handled - those are the codes OwnTone maps
-# to something visible in Home Assistant.
+# Track info keeps the Home Assistant media card filled, volume is handed over
+# so OwnTone can set it on the speaker instead of it being mixed into the audio.
 set -u
-
-[ "${PLAYER_EVENT:-}" = "track_changed" ] || exit 0
 
 PIPE="${METADATA_PIPE:-/music/Spotify.metadata}"
 [ -p "$PIPE" ] || exit 0
 
-# <dmap code as hex> <byte length> <base64 payload>
+# <type hex> <dmap code as hex> <byte length> <base64 payload>
 item() {
 	printf '<item><type>%s</type><code>%s</code><length>%s</length>\n<data encoding="base64">\n%s</data></item>\n' \
 		"$1" "$2" "$3" "$4"
 }
 
-text_item() { # <code hex> <text>
-	[ -n "$2" ] || return 0
-	item 636f7265 "$1" "${#2}" "$(printf '%s' "$2" | base64 | tr -d '\n')"
+text_item() { # <type hex> <code hex> <text>
+	[ -n "$3" ] || return 0
+	item "$1" "$2" "${#3}" "$(printf '%s' "$3" | base64 | tr -d '\n')"
 }
 
 # librespot joins multi-valued fields with newlines.
 first() { printf '%s' "${1:-}" | head -n 1; }
 
-payload=$(
-	text_item 6d696e6d "$(first "${NAME:-}")"     # minm - title
-	text_item 61736172 "$(first "${ARTISTS:-}")"  # asar - artist
-	text_item 6173616c "$(first "${ALBUM:-}")"    # asal - album
+case "${PLAYER_EVENT:-}" in
+track_changed)
+	# Only title/artist/album/cover, those are the codes OwnTone maps to
+	# something visible in Home Assistant.
+	payload=$(
+		text_item 636f7265 6d696e6d "$(first "${NAME:-}")"     # core/minm - title
+		text_item 636f7265 61736172 "$(first "${ARTISTS:-}")"  # core/asar - artist
+		text_item 636f7265 6173616c "$(first "${ALBUM:-}")"    # core/asal - album
 
-	cover=$(first "${COVERS:-}")
-	if [ -n "$cover" ] && curl -sf --max-time 5 -o /tmp/librespot-cover "$cover"; then
-		item 73736e63 50494354 \
-			"$(wc -c < /tmp/librespot-cover | tr -d ' ')" \
-			"$(base64 < /tmp/librespot-cover | tr -d '\n')"
-	fi
-)
+		cover=$(first "${COVERS:-}")
+		if [ -n "$cover" ] && curl -sf --max-time 5 -o /tmp/librespot-cover "$cover"; then
+			item 73736e63 50494354 \
+				"$(wc -c < /tmp/librespot-cover | tr -d ' ')" \
+				"$(base64 < /tmp/librespot-cover | tr -d '\n')"
+		fi
+	)
+	;;
+volume_changed)
+	# Shairport reports volume as "<airplay dB>,0.00,0.00,0.00", OwnTone maps
+	# -30..0 dB onto 0-100% and -144 onto mute. The trailing zeroes have to be
+	# exactly that, otherwise OwnTone assumes software volume and ignores it.
+	db=$(awk -v v="${VOLUME:-0}" 'BEGIN {
+		if (v <= 0) printf "-144.00"; else printf "%.2f", v / 65535 * 30 - 30
+	}')
+	payload=$(text_item 73736e63 70766f6c "${db},0.00,0.00,0.00")  # ssnc/pvol
+	;;
+*)
+	exit 0
+	;;
+esac
 
 # Opening the fifo blocks until OwnTone reads it, which only happens while this
 # pipe is playing. Never hang around waiting for a reader that isn't coming.

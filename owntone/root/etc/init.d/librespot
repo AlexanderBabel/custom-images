@@ -10,6 +10,12 @@ description="Spotify Connect receiver feeding OwnTone through a pipe"
 : "${LIBRESPOT_PIPE:=/music/Spotify}"
 : "${LIBRESPOT_OPTS:=--bitrate 320 --enable-volume-normalisation --initial-volume 100}"
 
+# "fixed" keeps librespot's hands off the audio and leaves the volume to the
+# volume_changed hook, which passes it to OwnTone and from there to the speaker.
+# That is instant, while volume mixed into the stream is only heard once
+# OwnTone's buffer has caught up. Set to log/linear/cubic to go back to that.
+: "${LIBRESPOT_VOLUME_CTRL:=fixed}"
+
 # Read by the --onevent hook.
 export METADATA_PIPE="${LIBRESPOT_PIPE}.metadata"
 
@@ -27,7 +33,9 @@ command_args="--name \"${LIBRESPOT_NAME}\"
 	--device-type speaker
 	--backend pipe
 	--device \"${LIBRESPOT_PIPE}\"
+	--volume-ctrl \"${LIBRESPOT_VOLUME_CTRL}\"
 	--cache /config/owntone/librespot
+	--cache-size-limit 1G
 	--onevent /usr/local/bin/librespot-metadata
 	${LIBRESPOT_OPTS}"
 

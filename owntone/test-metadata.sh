@@ -35,8 +35,21 @@ assert title "$(decode 6d696e6d)" "Weightless"
 assert artist "$(decode 61736172)" "Marconi Union"
 assert album "$(decode 6173616c)" "Ambient Transmissions"
 
-# Anything that is not a track change must stay silent.
-noise=$(PLAYER_EVENT=volume_changed METADATA_PIPE="$PIPE" /usr/local/bin/librespot-metadata)
+volume() { # <librespot volume 0-65535> -> what OwnTone gets to parse
+	METADATA_PIPE="$PIPE" PLAYER_EVENT=volume_changed VOLUME="$1" \
+		/usr/local/bin/librespot-metadata &
+	out=$(cat "$PIPE")
+	wait
+	decode 70766f6c
+}
+
+# OwnTone reads -30..0 dB as 0-100% and only accepts the trailing zeroes.
+assert "full volume" "$(volume 65535)" "0.00,0.00,0.00,0.00"
+assert "half volume" "$(volume 32768)" "-15.00,0.00,0.00,0.00"
+assert "muted" "$(volume 0)" "-144.00,0.00,0.00,0.00"
+
+# Anything else must stay silent.
+noise=$(PLAYER_EVENT=playing METADATA_PIPE="$PIPE" /usr/local/bin/librespot-metadata)
 assert "ignores other events" "$noise" ""
 
 rm -f "$PIPE"
