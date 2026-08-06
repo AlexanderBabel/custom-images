@@ -8,7 +8,7 @@ description="Spotify Connect receiver feeding OwnTone through a pipe"
 
 : "${LIBRESPOT_NAME:=Home Assistant}"
 : "${LIBRESPOT_PIPE:=/music/Spotify}"
-: "${LIBRESPOT_OPTS:=--bitrate 320 --enable-volume-normalisation --initial-volume 100}"
+: "${LIBRESPOT_OPTS:=--bitrate 320 --enable-volume-normalisation --initial-volume 50}"
 
 # The volume_changed hook hands the volume to OwnTone, which sets it on the
 # speaker right away. librespot must not attenuate the audio on top of that, or

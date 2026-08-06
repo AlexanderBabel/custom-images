@@ -48,6 +48,18 @@ assert "full volume" "$(volume 65535)" "0.00,0.00,0.00,0.00"
 assert "half volume" "$(volume 32768)" "-15.00,0.00,0.00,0.00"
 assert "muted" "$(volume 0)" "-144.00,0.00,0.00,0.00"
 
+emit() { # <event> -> the raw items OwnTone gets to read
+	METADATA_PIPE="$PIPE" PLAYER_EVENT="$1" /usr/local/bin/librespot-metadata &
+	out=$(cat "$PIPE")
+	wait
+	printf '%s' "$out" | tr -d '\n'
+}
+
+# Pausing has to throw away what OwnTone buffered, or it keeps playing.
+flush='<item><type>73736e63</type><code>70666c73</code><length>0</length></item>'
+assert "pause flushes" "$(emit paused)" "$flush"
+assert "seek flushes" "$(emit seeked)" "$flush"
+
 # Anything else must stay silent.
 noise=$(PLAYER_EVENT=playing METADATA_PIPE="$PIPE" /usr/local/bin/librespot-metadata)
 assert "ignores other events" "$noise" ""

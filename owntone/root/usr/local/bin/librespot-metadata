@@ -48,6 +48,12 @@ volume_changed)
 	}')
 	payload=$(text_item 73736e63 70766f6c "${db},0.00,0.00,0.00")  # ssnc/pvol
 	;;
+paused|stopped|seeked)
+	# ssnc/pfls, Shairport's flush: OwnTone drops what it has buffered, which
+	# is the couple of seconds that would otherwise keep playing. Carries no
+	# payload, so no <data> element either.
+	payload='<item><type>73736e63</type><code>70666c73</code><length>0</length></item>'
+	;;
 *)
 	exit 0
 	;;
