@@ -1,0 +1,36 @@
+#!/sbin/openrc-run
+# shellcheck shell=sh
+
+description="Spotify Connect receiver feeding OwnTone through a pipe"
+
+# User settings live next to the OwnTone config so they survive image updates.
+[ -f /config/owntone/librespot.conf ] && . /config/owntone/librespot.conf
+
+: "${LIBRESPOT_NAME:=Home Assistant}"
+: "${LIBRESPOT_PIPE:=/music/Spotify}"
+: "${LIBRESPOT_OPTS:=--bitrate 320 --enable-volume-normalisation --initial-volume 100}"
+
+# Read by the --onevent hook.
+export METADATA_PIPE="${LIBRESPOT_PIPE}.metadata"
+
+supervisor="supervise-daemon"
+respawn_delay=5
+
+# Put librespot's own output next to OwnTone's, i.e. in the add-on log tab.
+# supervise-daemon opens these after daemonising, so /dev/stdout would already
+# be /dev/null by then - go to the container's stdout directly instead.
+output_log="/proc/1/fd/1"
+error_log="/proc/1/fd/2"
+
+command="/usr/bin/librespot"
+command_args="--name \"${LIBRESPOT_NAME}\"
+	--device-type speaker
+	--backend pipe
+	--device \"${LIBRESPOT_PIPE}\"
+	--cache /config/owntone/librespot
+	--onevent /usr/local/bin/librespot-metadata
+	${LIBRESPOT_OPTS}"
+
+depend() {
+	after owntone
+}

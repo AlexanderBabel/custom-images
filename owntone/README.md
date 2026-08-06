@@ -1,38 +1,44 @@
 # HomePod Connect Docker Image
 
-This is the offical Docker image of the Home Assistant add-on [HomePod Connect](https://community.home-assistant.io/t/homepod-connect-spotify-on-homepods-with-spotify-connect/482227). You can also use it by itself on other systems. It works out of the box with zeroconf and can be discovered inside your local network.
+This is the official Docker image of the Home Assistant add-on [HomePod Connect](https://community.home-assistant.io/t/homepod-connect-spotify-on-homepods-with-spotify-connect/482227). You can also use it by itself on other systems. It works out of the box with zeroconf and can be discovered inside your local network.
 
-## Difference to linuxserver/daapd
+## Difference to owntone/owntone
 
-This repository contains a customized version of [linuxserver/daapd](https://github.com/linuxserver/docker-daapd). In this image librespot is replaced by [librespot-java](https://github.com/librespot-org/librespot-java) and openjdk11-jre is installed. Also a custom [OwnTone](https://github.com/owntone/owntone-server) and [librespot-java](https://github.com/librespot-org/librespot-java) configuration is provided.
+This image adds [librespot](https://github.com/librespot-org/librespot) to the [official OwnTone container](https://github.com/owntone/owntone-container). librespot appears on the network as a Spotify Connect speaker and writes the audio into a named pipe (`/music/Spotify`) that OwnTone plays, which lets you send Spotify to HomePods over AirPlay.
 
-The changes can be viewed inside the `Dockerfile`. 
+Both run as OpenRC services, the same supervisor the base image already uses for OwnTone, avahi and dbus.
 
-This image is built automatically when a new linuxserver/daapd version is released.
+Track title, artist, album and cover art are forwarded to OwnTone by `librespot-metadata`, a `--onevent` hook that writes Shairport Sync style metadata into `/music/Spotify.metadata`.
+
+The changes can be viewed inside the `Dockerfile`.
+
+> Before OwnTone 29 this image was based on `linuxserver/daapd` and used librespot-java. LinuxServer deprecated that image, and librespot-java has had no release since the Spotify API changes of 2025.
 
 ## Usage
 
-You can pull the image by using
-```bash
-docker pull alexbabel/owntone:VERSION
-```
-or use GHCR:
 ```bash
 docker pull ghcr.io/alexanderbabel/owntone:VERSION
 ```
 
 Run the image:
 ```bash
-docker run --network=host -v $(pwd)/config:/config/owntone alexbabel/owntone:VERSION
+docker run --network=host -v $(pwd)/config:/config ghcr.io/alexanderbabel/owntone:VERSION
 ```
 
 ## Access
 You can access the OwnTone instance on the default port (3689).
 
 ## Configuration
-All configuration files are stored inside the docker image in `/config/owntone`. There, you can find multple files:
+Configuration lives in `/config/owntone`, seeded on first start and never overwritten afterwards:
 
-- [`librespot-java.toml`](https://github.com/AlexanderBabel/owntone/blob/main/root/defaults/librespot-java.toml) - Configuration for [librespot-java](https://github.com/librespot-org/librespot-java)
-- [`owntone.conf`](https://github.com/AlexanderBabel/owntone/blob/main/root/defaults/owntone.conf) - Configuration for [OwnTone](https://github.com/owntone/owntone-server)
+- [`owntone.conf`](root/defaults/owntone.conf) - configuration for [OwnTone](https://github.com/owntone/owntone-server). The fully commented reference config ships in the image at `/usr/share/doc/owntone/examples/owntone.conf`.
+- [`librespot.conf`](root/defaults/librespot.conf) - device name and extra flags for [librespot](https://github.com/librespot-org/librespot).
 
-Both files are adjusted to work out of the box as a Spotify Connect speaker. The content of these files can be found in this repository.
+Both files work out of the box as a Spotify Connect speaker. Restart the container after changing them.
+
+## Tests
+
+```bash
+docker build -t owntone .
+docker run --rm -v "$PWD/test-metadata.sh:/t.sh:ro" --entrypoint sh owntone /t.sh
+```

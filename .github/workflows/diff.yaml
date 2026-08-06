@@ -32,7 +32,7 @@ jobs:
         id: extract
         run: |
           files=$(printf '%s\n' ${{ steps.filter.outputs.changed_files }} | \
-            sed 's|^images/||; s|/.*$||' | \
+            sed 's|/.*$||' | \
             awk '!a[$0]++' | \
             jq -nRc '[inputs | select(length>0)]')
           echo "files=${files}" >> $GITHUB_OUTPUT
@@ -42,9 +42,6 @@ jobs:
     runs-on: ubuntu-latest
 
     if: ${{ needs.changes.outputs.files != '[]' }}
-
-    outputs:
-      changes: "${{ steps.diff.outputs.changes }}"
 
     needs:
       - changes
@@ -73,14 +70,12 @@ jobs:
 
       - name: Retrieve version and revision
         id: version
-        env:
-          REGISTRY_TOKEN: ${{ secrets.CONTAINER_REGISTRY_TOKEN }}
         run: |
-          VERSION=$(sed -nr 's/^FROM .*:(.*)/\1/p' images/${{ matrix.file }}/Dockerfile | tail -n 1)
+          VERSION=$(sed -nr 's/^FROM .*:(.*)/\1/p' ${{ matrix.file }}/Dockerfile | tail -n 1)
 
           TAGS_JSON=$(curl -sf \
-            -u "${{ github.actor }}:${REGISTRY_TOKEN}" \
-            "https://${{ env.host }}/v2/${{ github.repository_owner }}/${{ matrix.file }}/tags/list" \
+            -u "${{ github.actor }}:${{ github.token }}" \
+            "https://ghcr.io/v2/alexanderbabel/${{ matrix.file }}/tags/list" \
             2>/dev/null || echo '{"tags":[]}')
 
           MAX_REV=$(echo "$TAGS_JSON" | jq -r --arg prefix "${VERSION}-" \

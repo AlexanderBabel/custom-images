@@ -1,0 +1,36 @@
+#!/sbin/openrc-run
+# shellcheck shell=sh
+
+description="Seed the OwnTone/librespot config and create the Spotify pipes"
+
+depend() {
+	before owntone librespot
+}
+
+start() {
+	ebegin "Preparing OwnTone configuration"
+
+	# /var/cache/owntone is where configs from before 29.x end up, OwnTone 29
+	# dropped the cache_path option they set.
+	mkdir -p /config/owntone/dbase_and_logs /config/owntone/librespot \
+		/etc/owntone /music /var/cache/owntone
+	chown abc:abc /var/cache/owntone
+
+	[ -f /config/owntone/owntone.conf ] || cp /defaults/owntone.conf /config/owntone/owntone.conf
+	[ -f /config/owntone/librespot.conf ] || cp /defaults/librespot.conf /config/owntone/librespot.conf
+
+	# OwnTone reads its config from /etc/owntone, users edit it in /config.
+	ln -sf /config/owntone/owntone.conf /etc/owntone/owntone.conf
+
+	# librespot writes raw PCM into the first pipe and track info into the
+	# second one; OwnTone picks both up because /music is a library directory.
+	for pipe in /music/Spotify /music/Spotify.metadata; do
+		if [ ! -p "$pipe" ]; then
+			rm -f "$pipe"
+			mkfifo -m 660 "$pipe"
+		fi
+	done
+
+	chown -R abc:abc /config/owntone /music
+	eend $?
+}

@@ -1,15 +1,18 @@
-FROM ghcr.io/linuxserver/daapd:28.10-ls172
+FROM owntone/owntone:29.3
 
-# renovate: datasource=github-releases depName=librespot-org/librespot-java
-ENV LIBRESPOT_VERSION=1.6.5
-
-RUN echo "**** install java and remove librespot ****" && \
-    apk add -U --update --no-cache \
-      openjdk11-jre && \
-    apk del \
+# librespot only lives in Alpine's edge/testing repo for now. Unpinned on
+# purpose: pinning a testing version just swaps silent upgrades for builds that
+# break once edge drops the release.
+# ponytail: move to the regular repos as soon as librespot lands in community.
+RUN apk add --no-cache \
+      --repository=https://dl-cdn.alpinelinux.org/alpine/edge/testing \
       librespot && \
-    rm -r /etc/s6-overlay/s6-rc.d/user/contents.d/svc-librespot /etc/s6-overlay/s6-rc.d/svc-librespot
+    # linuxserver/daapd ran OwnTone as "abc" (uid 911) and existing add-on
+    # installs still carry that in their owntone.conf, so keep the user.
+    adduser -D -H -u 911 abc && \
+    mkdir -p /etc/owntone /music
 
-ADD https://github.com/librespot-org/librespot-java/releases/download/v${LIBRESPOT_VERSION}/librespot-api-${LIBRESPOT_VERSION}.jar /opt/librespot-java.jar
 COPY root/ /
 
+RUN rc-update add owntone-init default && \
+    rc-update add librespot default

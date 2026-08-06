@@ -1,0 +1,8 @@
+services:
+  owntone:
+    image: ghcr.io/alexanderbabel/owntone:latest
+    container_name: owntone
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./config:/config
