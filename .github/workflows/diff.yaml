@@ -6,6 +6,11 @@ on:
       - main
     paths:
       - "**/Dockerfile"
+  workflow_dispatch:
+    inputs:
+      image:
+        description: Directory of the image to build, e.g. owntone
+        required: true
 
 jobs:
   changes:
@@ -22,6 +27,7 @@ jobs:
       - name: Get changes
         uses: dorny/paths-filter@v4
         id: filter
+        if: github.event_name == 'push'
         with:
           list-files: shell
           filters: |
@@ -31,6 +37,11 @@ jobs:
       - name: Format output
         id: extract
         run: |
+          if [ -n "${{ inputs.image }}" ]; then
+            echo 'files=["${{ inputs.image }}"]' >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
           files=$(printf '%s\n' ${{ steps.filter.outputs.changed_files }} | \
             sed 's|/.*$||' | \
             awk '!a[$0]++' | \
