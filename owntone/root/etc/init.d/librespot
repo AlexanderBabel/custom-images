@@ -10,11 +10,15 @@ description="Spotify Connect receiver feeding OwnTone through a pipe"
 : "${LIBRESPOT_PIPE:=/music/Spotify}"
 : "${LIBRESPOT_OPTS:=--bitrate 320 --enable-volume-normalisation --initial-volume 100}"
 
-# "fixed" keeps librespot's hands off the audio and leaves the volume to the
-# volume_changed hook, which passes it to OwnTone and from there to the speaker.
-# That is instant, while volume mixed into the stream is only heard once
-# OwnTone's buffer has caught up. Set to log/linear/cubic to go back to that.
-: "${LIBRESPOT_VOLUME_CTRL:=fixed}"
+# The volume_changed hook hands the volume to OwnTone, which sets it on the
+# speaker right away. librespot must not attenuate the audio on top of that, or
+# the change lands twice: once immediately and once when OwnTone's buffer
+# catches up. It always attenuates though - "fixed" included, that one falls
+# through to the linear arm in mixer/mappings.rs - so ask for a logarithmic
+# control with a 0.01 dB range instead, which is inaudible.
+# ponytail: an actual bypass would be a librespot patch, this needs no build.
+# Set to e.g. "--volume-ctrl log --volume-range 60" to let librespot do it.
+: "${LIBRESPOT_VOLUME_OPTS:=--volume-ctrl log --volume-range 0.01}"
 
 # Read by the --onevent hook.
 export METADATA_PIPE="${LIBRESPOT_PIPE}.metadata"
@@ -33,7 +37,7 @@ command_args="--name \"${LIBRESPOT_NAME}\"
 	--device-type speaker
 	--backend pipe
 	--device \"${LIBRESPOT_PIPE}\"
-	--volume-ctrl \"${LIBRESPOT_VOLUME_CTRL}\"
+	${LIBRESPOT_VOLUME_OPTS}
 	--cache /config/owntone/librespot
 	--cache-size-limit 1G
 	--onevent /usr/local/bin/librespot-metadata
