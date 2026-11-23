@@ -1,4 +1,4 @@
-FROM owntone/owntone:29.3
+FROM owntone/owntone:29.4
 
 # librespot only lives in Alpine's edge/testing repo for now. Unpinned on
 # purpose: pinning a testing version just swaps silent upgrades for builds that
